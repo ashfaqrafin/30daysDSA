@@ -37,39 +37,63 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
+struct range
+{
+    int left, right, index;
+};
+
 signed main(void)
 {
-    // cout.precision(10);
-    // cout.setf(ios::fixed);
-    ios::sync_with_stdio(false);
-    cout.tie(nullptr);
-    cin.tie(nullptr);
+    int n;
+    cin >> n;
 
-    int n, k;
-    cin >> n >> k;
+    vector<range> arr(n);
+    int x, y;
 
-    queue<int> person;
-
-    repe(i, 1, n)
+    rep(i, 0, n)
     {
-        person.push(i);
+        cin >> x >> y;
+        arr[i].left = x;
+        arr[i].right = y;
+        arr[i].index = i;
     }
 
-    int j = 0;
-    while (!person.empty())
+    sort(all(arr), [&](range a, range b)
+         {
+if(a.left==b.left)return a.right>b.right;
+return a.left<b.left; });
+
+    vi contained(n);
+    vi contains(n);
+
+    int maxr = 0;
+    int minr = INT_MAX;
+    rep(i, 0, n)
     {
-        j = 0;
-
-        while (j < k)
+        if (arr[i].right <= maxr)
         {
-
-            person.push(person.front());
-            person.pop();
-            j++;
+            contained[arr[i].index] = 1;
         }
+        maxr = max(maxr, arr[i].right);
+    }
 
-        cout << person.front() << " ";
-        person.pop();
+    repn(i, n - 1, 0)
+    {
+        if (arr[i].right >= minr)
+        {
+            contains[arr[i].index] = 1;
+        }
+        minr = min(minr, arr[i].right);
+    }
+
+    repa(i, contains)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+    repa(i, contained)
+    {
+        cout << i << " ";
     }
     cout << endl;
 
