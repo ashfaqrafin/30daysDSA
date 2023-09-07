@@ -39,18 +39,6 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
-struct day
-{
-    int t, c, p;
-};
-
-bool cmp(day a, day b)
-{
-    if (a.t != b.t)
-        return a.t < b.t;
-    return a.c > b.c;
-}
-
 signed main(void)
 {
 
@@ -60,38 +48,45 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, l, r, now = 0, ans = 0;
-    cin >> n;
-    vector<day> C;
-    priority_queue<int, vector<int>, greater<int>> Q;
-    vi R(n);
-    rep(i, 0, n)
+    int n, target;
+    cin >> n >> target;
+
+    vi times(n);
+    repa(i, times)
     {
-        cin >> l >> r;
-        C.pb({l, 1, i + 1});
-        C.pb({r, -1, i + 1});
-        Q.push(i + 1);
+        cin >> i;
     }
-    sort(all(C), cmp);
-    repa(d, C)
+
+    int low = 0;
+    int high = 1e18;
+    int ans = 0;
+
+    while (low <= high)
     {
-        if (d.c > 0)
+        int mid = (low + high) / 2;
+
+        int sum = 0;
+        rep(i, 0, n)
         {
-            R[d.p - 1] = Q.top();
-            Q.pop();
+            sum += (mid / times[i]);
+            if (sum >= target)
+            {
+                break;
+            }
+        }
+
+        if (sum >= target)
+        {
+            ans = mid;
+            high = mid - 1;
         }
         else
         {
-            Q.push(R[d.p - 1]);
+            low = mid + 1;
         }
-        now += d.c;
-        ans = max(ans, now);
     }
+
     cout << ans << endl;
-    repa(i, R)
-    {
-        cout << i << " ";
-    }
 
     return 0;
 }
