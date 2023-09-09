@@ -48,42 +48,24 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, target;
-    cin >> n >> target;
+    int n;
+    cin >> n;
 
-    vi times(n);
-    repa(i, times)
+    vector<pair<int, int>> given(n);
+
+    repa(i, given)
     {
-        cin >> i;
+        cin >> i.first >> i.second;
     }
 
-    int low = 0;
-    int high = 1e18;
-    int ans = 0;
+    sort(all(given));
 
-    while (low <= high)
+    int cur = 0, ans = 0;
+
+    repa(i, given)
     {
-        int mid = (low + high) / 2;
-
-        int sum = 0;
-        rep(i, 0, n)
-        {
-            sum += (mid / times[i]);
-            if (sum >= target)
-            {
-                break;
-            }
-        }
-
-        if (sum >= target)
-        {
-            ans = mid;
-            high = mid - 1;
-        }
-        else
-        {
-            low = mid + 1;
-        }
+        cur += i.first;
+        ans += i.second - cur;
     }
 
     cout << ans << endl;
