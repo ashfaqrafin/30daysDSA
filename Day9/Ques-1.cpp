@@ -17,7 +17,6 @@
 #include <bit>
 #include <bitset>
 #include <numeric>
-
 using namespace std;
 
 const int N = 200007;
@@ -39,6 +38,18 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
+struct s
+{
+    int sum, i, j;
+};
+
+bool cmp(s &a, s &b)
+{
+    return a.sum < b.sum;
+}
+
+s S[1000004];
+
 signed main(void)
 {
 
@@ -48,27 +59,41 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int n, target;
+    cin >> n >> target;
 
-    vector<pair<int, int>> given(n);
+    int count = 0;
 
+    vi given(n);
     repa(i, given)
     {
-        cin >> i.first >> i.second;
+        cin >> i;
     }
-
-    sort(all(given));
-
-    int cur = 0, ans = 0;
-
-    repa(i, given)
+    rep(i, 0, n)
     {
-        cur += i.first;
-        ans += i.second - cur;
+        rep(j, i + 1, n)
+        {
+            S[count++] = {given[i] + given[j], i, j};
+        }
     }
 
-    cout << ans << endl;
+    sort(S, S + count, cmp);
+
+    int p = count - 1;
+    rep(i, 0, p)
+    {
+        while (S[i].sum + S[p].sum > target)
+            p--;
+        while (S[i].sum + S[p].sum == target and (S[i].i == S[p].i || S[i].i == S[p].j || S[i].j == S[p].i || S[i].j == S[p].j))
+            p--;
+        if (S[i].sum + S[p].sum == target)
+        {
+            cout << S[i].i + 1 << " " << S[i].j + 1 << " " << S[p].i + 1 << " " << S[p].j + 1 << endl;
+            return 0;
+        }
+    }
+
+    cout << "IMPOSSIBLE" << endl;
 
     return 0;
 }
