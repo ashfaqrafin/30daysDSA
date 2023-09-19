@@ -38,18 +38,6 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
-struct s
-{
-    int sum, i, j;
-};
-
-bool cmp(s &a, s &b)
-{
-    return a.sum < b.sum;
-}
-
-s S[1000004];
-
 signed main(void)
 {
 
@@ -59,41 +47,28 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, target;
-    cin >> n >> target;
-
-    int count = 0;
-
+    int n;
+    cin >> n;
     vi given(n);
+
     repa(i, given)
     {
         cin >> i;
     }
+
+    stack<pair<int, int>> helper;
+
+    helper.push({0, 0});
+
     rep(i, 0, n)
     {
-        rep(j, i + 1, n)
-        {
-            S[count++] = {given[i] + given[j], i, j};
-        }
+        while (!helper.empty() and helper.top().first >= given[i])
+            helper.pop();
+        cout << helper.top().second << " ";
+        helper.push({given[i], i + 1});
     }
 
-    sort(S, S + count, cmp);
-
-    int p = count - 1;
-    rep(i, 0, p)
-    {
-        while (S[i].sum + S[p].sum > target)
-            p--;
-        while (S[i].sum + S[p].sum == target and (S[i].i == S[p].i || S[i].i == S[p].j || S[i].j == S[p].i || S[i].j == S[p].j))
-            p--;
-        if (S[i].sum + S[p].sum == target)
-        {
-            cout << S[i].i + 1 << " " << S[i].j + 1 << " " << S[p].i + 1 << " " << S[p].j + 1 << endl;
-            return 0;
-        }
-    }
-
-    cout << "IMPOSSIBLE" << endl;
+    cout << endl;
 
     return 0;
 }
