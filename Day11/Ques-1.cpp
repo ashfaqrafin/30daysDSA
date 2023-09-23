@@ -49,26 +49,24 @@ signed main(void)
 
     int n;
     cin >> n;
+
     vi given(n);
-
-    repa(i, given)
+    int sum = 0, ans = 0;
+    given[0] = 1;
+    int a;
+    rep(i, 0, n)
     {
-        cin >> i;
+        cin >> a;
+        sum += a;
+        given[((sum % n) + n) % n]++;
     }
-
-    stack<pair<int, int>> helper;
-
-    helper.push({0, 0});
 
     rep(i, 0, n)
     {
-        while (!helper.empty() and helper.top().first >= given[i])
-            helper.pop();
-        cout << helper.top().second << " ";
-        helper.push({given[i], i + 1});
+        ans += (given[i] * (given[i] - 1)) / 2;
     }
 
-    cout << endl;
+    cout << ans << endl;
 
     return 0;
 }
