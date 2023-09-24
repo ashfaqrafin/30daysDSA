@@ -38,6 +38,28 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
+bool isPossible(vi &given, int &k, int max_sum)
+{
+    int cur_sum = 0, count = 0;
+
+    repa(i, given)
+    {
+        if (i > max_sum)
+            return false;
+
+        if (cur_sum + i > max_sum)
+        {
+            count++;
+            cur_sum = 0;
+        }
+        cur_sum += i;
+    }
+
+    if (cur_sum > 0)
+        count++;
+    return count <= k;
+}
+
 signed main(void)
 {
 
@@ -47,26 +69,28 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
 
     vi given(n);
-    int sum = 0, ans = 0;
-    given[0] = 1;
-    int a;
-    rep(i, 0, n)
-    {
-        cin >> a;
-        sum += a;
-        given[((sum % n) + n) % n]++;
-    }
+    repa(i, given) cin >> i;
 
-    rep(i, 0, n)
-    {
-        ans += (given[i] * (given[i] - 1)) / 2;
-    }
+    int left = 1, right = (2e5 * 1e9);
 
-    cout << ans << endl;
+    while (left <= right)
+    {
+        int mid = (left + right) / 2;
+        if (isPossible(given, k, mid))
+        {
+            right = mid - 1;
+        }
+        else
+        {
+            left = mid + 1;
+        }
+    }
+    cout << left << endl;
 
     return 0;
 }
+
