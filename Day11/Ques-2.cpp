@@ -47,26 +47,30 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
 
     vi given(n);
-    int sum = 0, ans = 0;
-    given[0] = 1;
-    int a;
+    unordered_map<int, int> helper;
+
+    int size = 0, second = 0, ans = 0;
     rep(i, 0, n)
     {
-        cin >> a;
-        sum += a;
-        given[((sum % n) + n) % n]++;
+        cin >> given[i];
+        if (helper[given[i]] == 0)
+            size++;
+        helper[given[i]]++;
+        while (size > k)
+        {
+            helper[given[second]]--;
+            if (helper[given[second]] == 0)
+                size--;
+            second++;
+        }
+        ans += i - second + 1;
     }
-
-    rep(i, 0, n)
-    {
-        ans += (given[i] * (given[i] - 1)) / 2;
-    }
-
     cout << ans << endl;
 
     return 0;
 }
+
