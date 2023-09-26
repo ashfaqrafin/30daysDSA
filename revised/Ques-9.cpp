@@ -8,7 +8,6 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
-#include <unordered_set>
 #include <string>
 #include <climits>
 #include <math.h>
@@ -30,6 +29,7 @@ const int mod = 1e9 + 7;
 // loop
 #define rep(variable, start, end) for (int variable = start; variable < end; variable++)
 #define repe(variable, start, end) for (int variable = start; variable <= end; variable++)
+#define repc(variable, start, end, increment) for (int variable = start; variable < end; increment)
 #define repn(variable, start, end) for (int variable = start; variable >= end; variable--)
 #define repa(variable, container) for (auto &variable : container)
 // vector
@@ -40,44 +40,33 @@ const int mod = 1e9 + 7;
 
 signed main(void)
 {
-
     // cout.precision(10);
     // cout.setf(ios::fixed);
     ios::sync_with_stdio(false);
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, k;
-    cin >> n >> k;
+    int n;
+    cin >> n;
 
-    vector<pair<int, int>> given(n);
-    rep(i, 0, n)
+    vi arr(n);
+
+    repa(i, arr)
     {
-        cin >> given[i].first >> given[i].second;
+        cin >> i;
     }
 
-    sort(all(given), [&](pii &a, pii &b)
-         { return a.second < b.second; });
+    sort(all(arr));
 
-    multiset<int> helper;
-    rep(i, 0, k)
+    int reco = arr[n / 2];
+
+    int total = 0;
+    repa(i, arr)
     {
-        helper.insert(0);
+        total += abs(i - reco);
     }
-    int ans = 0;
 
-    rep(i, 0, n)
-    {
-        auto it = helper.upper_bound(given[i].first);
-        if (it == helper.begin())
-            continue;
-
-        helper.erase(--it);
-        helper.insert(given[i].second);
-        ans++;
-    }
-    cout << ans << endl;
+    cout << total << endl;
 
     return 0;
 }
-

@@ -8,7 +8,6 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
-#include <unordered_set>
 #include <string>
 #include <climits>
 #include <math.h>
@@ -26,10 +25,11 @@ const int mod = 1e9 + 7;
 #define int long long
 #define double long double
 #define pb push_back
-#define all(container) container.begin(), container.end()
+#define all(container) begin(container), end(container)
 // loop
 #define rep(variable, start, end) for (int variable = start; variable < end; variable++)
 #define repe(variable, start, end) for (int variable = start; variable <= end; variable++)
+#define repc(variable, start, end, increment) for (int variable = start; variable < end; increment)
 #define repn(variable, start, end) for (int variable = start; variable >= end; variable--)
 #define repa(variable, container) for (auto &variable : container)
 // vector
@@ -40,39 +40,38 @@ const int mod = 1e9 + 7;
 
 signed main(void)
 {
-
     // cout.precision(10);
     // cout.setf(ios::fixed);
     ios::sync_with_stdio(false);
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, a, b;
-    cin >> n >> a >> b;
+    int n, m;
+    cin >> n >> m;
+    multiset<int> a;
+    int ni, mi;
 
-    vi given(n + 1);
-
-    repe(i, 1, n)
+    rep(i, 0, n)
     {
-        cin >> given[i];
-        given[i] += given[i - 1];
+        cin >> ni;
+        a.insert(ni);
     }
 
-    multiset<int> helper;
-    repe(i, a, b)
+    rep(i, 0, m)
     {
-        helper.insert(given[i]);
+        cin >> mi;
+
+        auto it = a.upper_bound(mi);
+        if (it == a.begin())
+        {
+            cout << -1 << endl;
+        }
+        else
+        {
+            cout << *(--it) << endl;
+            a.erase(it);
+        }
     }
-    int maxSum = -1e18;
-    repe(i, 1, n - a + 1)
-    {
-        maxSum = max(maxSum, *helper.rbegin() - given[i - 1]);
-        helper.erase(helper.find(given[i + a - 1]));
-        if (i + b <= n)
-            helper.insert(given[i + b]);
-    }
-    cout << maxSum << endl;
 
     return 0;
 }
-
