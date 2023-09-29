@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <climits>
 #include <math.h>
@@ -16,6 +17,7 @@
 #include <bit>
 #include <bitset>
 #include <numeric>
+
 using namespace std;
 
 const int N = 200007;
@@ -39,35 +41,52 @@ const int mod = 1e9 + 7;
 
 signed main(void)
 {
+
     // cout.precision(10);
     // cout.setf(ios::fixed);
     ios::sync_with_stdio(false);
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int n, target;
+    cin >> n >> target;
 
-    int a = 1, b = 0;
-
-    while (n > 0)
+    vi times(n);
+    repa(i, times)
     {
-        for (int i = 2; i <= n; i += 2)
+        cin >> i;
+    }
+
+    int low = 0;
+    int high = 1e18;
+    int ans = 0;
+
+    while (low <= high)
+    {
+        int mid = (low + high) / 2;
+
+        int sum = 0;
+        rep(i, 0, n)
         {
-            cout << a * i + b << " ";
+            sum += (mid / times[i]);
+            if (sum >= target)
+            {
+                break;
+            }
         }
-        if (n & 1)
+
+        if (sum >= target)
         {
-            cout << a + b << " ";
-            b += a;
+            ans = mid;
+            high = mid - 1;
         }
         else
         {
-            b -= a;
+            low = mid + 1;
         }
-        a <<= 1;
-        n >>= 1;
     }
+
+    cout << ans << endl;
 
     return 0;
 }

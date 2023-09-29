@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <climits>
 #include <math.h>
@@ -39,35 +40,36 @@ const int mod = 1e9 + 7;
 
 signed main(void)
 {
+
     // cout.precision(10);
     // cout.setf(ios::fixed);
     ios::sync_with_stdio(false);
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
 
-    int a = 1, b = 0;
+    vi given(n);
+    unordered_map<int, int> helper;
 
-    while (n > 0)
+    int size = 0, second = 0, ans = 0;
+    rep(i, 0, n)
     {
-        for (int i = 2; i <= n; i += 2)
+        cin >> given[i];
+        if (helper[given[i]] == 0)
+            size++;
+        helper[given[i]]++;
+        while (size > k)
         {
-            cout << a * i + b << " ";
+            helper[given[second]]--;
+            if (helper[given[second]] == 0)
+                size--;
+            second++;
         }
-        if (n & 1)
-        {
-            cout << a + b << " ";
-            b += a;
-        }
-        else
-        {
-            b -= a;
-        }
-        a <<= 1;
-        n >>= 1;
+        ans += i - second + 1;
     }
+    cout << ans << endl;
 
     return 0;
 }

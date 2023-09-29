@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <climits>
 #include <math.h>
@@ -37,37 +38,58 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
+bool isPossible(vi &given, int &k, int max_sum)
+{
+    int cur_sum = 0, count = 0;
+
+    repa(i, given)
+    {
+        if (i > max_sum)
+            return false;
+
+        if (cur_sum + i > max_sum)
+        {
+            count++;
+            cur_sum = 0;
+        }
+        cur_sum += i;
+    }
+
+    if (cur_sum > 0)
+        count++;
+    return count <= k;
+}
+
 signed main(void)
 {
+
     // cout.precision(10);
     // cout.setf(ios::fixed);
     ios::sync_with_stdio(false);
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
 
-    int a = 1, b = 0;
+    vi given(n);
+    repa(i, given) cin >> i;
 
-    while (n > 0)
+    int left = 1, right = (2e5 * 1e9);
+
+    while (left <= right)
     {
-        for (int i = 2; i <= n; i += 2)
+        int mid = (left + right) / 2;
+        if (isPossible(given, k, mid))
         {
-            cout << a * i + b << " ";
-        }
-        if (n & 1)
-        {
-            cout << a + b << " ";
-            b += a;
+            right = mid - 1;
         }
         else
         {
-            b -= a;
+            left = mid + 1;
         }
-        a <<= 1;
-        n >>= 1;
     }
+    cout << left << endl;
 
     return 0;
 }

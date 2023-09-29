@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <climits>
 #include <math.h>
@@ -39,6 +40,7 @@ const int mod = 1e9 + 7;
 
 signed main(void)
 {
+
     // cout.precision(10);
     // cout.setf(ios::fixed);
     ios::sync_with_stdio(false);
@@ -48,26 +50,23 @@ signed main(void)
     int n;
     cin >> n;
 
-    int a = 1, b = 0;
-
-    while (n > 0)
+    vi given(n);
+    int sum = 0, ans = 0;
+    given[0] = 1;
+    int a;
+    rep(i, 0, n)
     {
-        for (int i = 2; i <= n; i += 2)
-        {
-            cout << a * i + b << " ";
-        }
-        if (n & 1)
-        {
-            cout << a + b << " ";
-            b += a;
-        }
-        else
-        {
-            b -= a;
-        }
-        a <<= 1;
-        n >>= 1;
+        cin >> a;
+        sum += a;
+        given[((sum % n) + n) % n]++;
     }
+
+    rep(i, 0, n)
+    {
+        ans += (given[i] * (given[i] - 1)) / 2;
+    }
+
+    cout << ans << endl;
 
     return 0;
 }

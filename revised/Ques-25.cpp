@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <climits>
 #include <math.h>
@@ -37,37 +38,62 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
+struct s
+{
+    int sum, i, j;
+};
+
+bool cmp(s &a, s &b)
+{
+    return a.sum < b.sum;
+}
+
+s S[1000004];
+
 signed main(void)
 {
+
     // cout.precision(10);
     // cout.setf(ios::fixed);
     ios::sync_with_stdio(false);
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int n, target;
+    cin >> n >> target;
 
-    int a = 1, b = 0;
+    int count = 0;
 
-    while (n > 0)
+    vi given(n);
+    repa(i, given)
     {
-        for (int i = 2; i <= n; i += 2)
-        {
-            cout << a * i + b << " ";
-        }
-        if (n & 1)
-        {
-            cout << a + b << " ";
-            b += a;
-        }
-        else
-        {
-            b -= a;
-        }
-        a <<= 1;
-        n >>= 1;
+        cin >> i;
     }
+    rep(i, 0, n)
+    {
+        rep(j, i + 1, n)
+        {
+            S[count++] = {given[i] + given[j], i, j};
+        }
+    }
+
+    sort(S, S + count, cmp);
+
+    int p = count - 1;
+    rep(i, 0, p)
+    {
+        while (S[i].sum + S[p].sum > target)
+            p--;
+        while (S[i].sum + S[p].sum == target and (S[i].i == S[p].i || S[i].i == S[p].j || S[i].j == S[p].i || S[i].j == S[p].j))
+            p--;
+        if (S[i].sum + S[p].sum == target)
+        {
+            cout << S[i].i + 1 << " " << S[i].j + 1 << " " << S[p].i + 1 << " " << S[p].j + 1 << endl;
+            return 0;
+        }
+    }
+
+    cout << "IMPOSSIBLE" << endl;
 
     return 0;
 }

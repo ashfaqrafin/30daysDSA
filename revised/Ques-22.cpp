@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <climits>
 #include <math.h>
@@ -16,6 +17,7 @@
 #include <bit>
 #include <bitset>
 #include <numeric>
+
 using namespace std;
 
 const int N = 200007;
@@ -39,6 +41,7 @@ const int mod = 1e9 + 7;
 
 signed main(void)
 {
+
     // cout.precision(10);
     // cout.setf(ios::fixed);
     ios::sync_with_stdio(false);
@@ -48,26 +51,24 @@ signed main(void)
     int n;
     cin >> n;
 
-    int a = 1, b = 0;
+    vector<pair<int, int>> given(n);
 
-    while (n > 0)
+    repa(i, given)
     {
-        for (int i = 2; i <= n; i += 2)
-        {
-            cout << a * i + b << " ";
-        }
-        if (n & 1)
-        {
-            cout << a + b << " ";
-            b += a;
-        }
-        else
-        {
-            b -= a;
-        }
-        a <<= 1;
-        n >>= 1;
+        cin >> i.first >> i.second;
     }
+
+    sort(all(given));
+
+    int cur = 0, ans = 0;
+
+    repa(i, given)
+    {
+        cur += i.first;
+        ans += i.second - cur;
+    }
+
+    cout << ans << endl;
 
     return 0;
 }
