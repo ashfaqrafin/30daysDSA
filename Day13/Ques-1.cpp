@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <climits>
 #include <math.h>
@@ -25,11 +26,10 @@ const int mod = 1e9 + 7;
 #define int long long
 #define double long double
 #define pb push_back
-#define all(container) begin(container), end(container)
+#define all(container) container.begin(), container.end()
 // loop
 #define rep(variable, start, end) for (int variable = start; variable < end; variable++)
 #define repe(variable, start, end) for (int variable = start; variable <= end; variable++)
-#define repc(variable, start, end, increment) for (int variable = start; variable < end; increment)
 #define repn(variable, start, end) for (int variable = start; variable >= end; variable--)
 #define repa(variable, container) for (auto &variable : container)
 // vector
@@ -40,38 +40,43 @@ const int mod = 1e9 + 7;
 
 signed main(void)
 {
+
     // cout.precision(10);
     // cout.setf(ios::fixed);
     ios::sync_with_stdio(false);
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, m;
-    cin >> n >> m;
-    multiset<int> a;
-    int ni, mi;
+    int n, limit;
+    cin >> n >> limit;
 
-    rep(i, 0, n)
+    vi profit(n), weight(n);
+
+    repa(i, weight) cin >> i;
+    repa(i, profit) cin >> i;
+
+    vector<vector<int>> dp(n + 1, vi(limit + 1));
+
+    repe(i, 0, n)
     {
-        cin >> ni;
-        a.insert(ni);
+        repe(j, 0, limit)
+        {
+            if (i == 0 or j == 0)
+            {
+                dp[i][j] = 0;
+            }
+            else if (weight[i - 1] > j)
+            {
+                dp[i][j] = dp[i - 1][j];
+            }
+            else
+            {
+                dp[i][j] = max(profit[i - 1] + dp[i - 1][j - weight[i - 1]], dp[i - 1][j]);
+            }
+        }
     }
 
-    rep(i, 0, m)
-    {
-        cin >> mi;
-
-        auto it = a.upper_bound(mi);
-        if (it == a.begin())
-        {
-            cout << -1 << endl;
-        }
-        else
-        {
-            cout << *(--it) << endl;
-            a.erase(it);
-        }
-    }
+    cout << dp[n][limit] << endl;
 
     return 0;
 }
