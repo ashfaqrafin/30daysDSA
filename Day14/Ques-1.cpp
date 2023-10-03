@@ -46,27 +46,41 @@ signed main(void)
     ios::sync_with_stdio(false);
     cout.tie(nullptr);
     cin.tie(nullptr);
-    int n, target;
-    cin >> n >> target;
 
-    vi given(n);
-    repa(i, given) cin >> i;
+    int n;
+    cin >> n;
 
-    vi arr(target + 1);
-    arr[0] = 1;
+    int sum = 0;
 
+    vi arr(n);
+    repa(i, arr)
+    {
+        cin >> i;
+        sum += i;
+    }
+
+    int target = sum / 2;
+    vi dp(target + 1);
+    dp[0] = 1;
     repe(i, 1, n)
     {
         repn(j, target, 0)
         {
-            if (target >= given[i - 1])
+            if (arr[i - 1] <= j)
             {
-                arr[j] += arr[j - given[i - 1]];
+                dp[j] = dp[j] or dp[j - arr[i - 1]];
             }
         }
     }
 
-    cout << arr[target] << endl;
+    repn(i, target, 1)
+    {
+        if (dp[i])
+        {
+            cout << i << endl;
+            break;
+        }
+    }
 
     return 0;
 }
