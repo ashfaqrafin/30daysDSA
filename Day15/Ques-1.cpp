@@ -50,19 +50,19 @@ signed main(void)
     int n, target;
     cin >> n >> target;
 
-    vi arr(n);
-    repa(i, arr) cin >> i;
+    vi given(n);
+    repa(i, given) cin >> i;
 
     vi dp(target + 1);
-    repe(i, 1, target) dp[i] = INT_MAX;
+    dp[0] = 1;
 
     repe(i, 1, n)
     {
         repe(j, 1, target)
         {
-            if (arr[i - 1] <= j)
+            if (given[i - 1] <= j)
             {
-                dp[j] = min(1 + dp[j - arr[i - 1]], dp[j]);
+                dp[j] += dp[j - given[i - 1]];
             }
         }
     }

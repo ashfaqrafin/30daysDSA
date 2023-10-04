@@ -38,6 +38,22 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
+int recursion(vi &length, vi &price, int n, int limit)
+{
+
+    if (n < 0 or limit == 0)
+    {
+        return 0;
+    }
+
+    if (length[n] > limit)
+    {
+        return recursion(length, price, n - 1, limit);
+    }
+
+    return max(price[n] + recursion(length, price, n, limit - length[n]), recursion(length, price, n - 1, limit));
+}
+
 signed main(void)
 {
 
@@ -47,40 +63,15 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int n, limit;
+    cin >> n >> limit;
 
-    int sum = 0;
+    vi length(n), price(n);
 
-    vi arr(n);
-    repa(i, arr)
-    {
-        cin >> i;
-        sum += i;
-    }
+    repa(i, length) cin >> i;
+    repa(i, price) cin >> i;
 
-    int target = sum / 2;
-    vi dp(target + 1);
-    dp[0] = 1;
-    repe(i, 1, n)
-    {
-        repn(j, target, 0)
-        {
-            if (arr[i - 1] <= j)
-            {
-                dp[j] = dp[j] or dp[j - arr[i - 1]];
-            }
-        }
-    }
-
-    repn(i, target, 1)
-    {
-        if (dp[i])
-        {
-            cout << i << endl;
-            break;
-        }
-    }
+    cout << recursion(length, price, n - 1, limit) << endl;
 
     return 0;
 }

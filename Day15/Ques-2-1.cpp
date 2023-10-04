@@ -47,28 +47,37 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, diff;
-    cin >> n >> diff;
+    int n, limit;
+    cin >> n >> limit;
 
-    vi arr(n);
-    repa(i, arr) cin >> i;
+    map<int, pair<int, int>> helper;
+    int a, b;
+    vi dp(limit + 1);
+    rep(i, 0, n)
+    {
+        cin >> a >> b;
+        helper[i] = {a, b};
+        dp[a] = b;
+    }
 
-    vi dp(diff + 1);
-    dp[0] = 1;
+    repa(i, dp)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
 
     repe(i, 1, n)
     {
-        repn(j, diff, 1)
+        repe(j, 1, limit)
         {
-            if (arr[i - 1] <= j)
+            if (j >= helper[i - 1].first)
             {
-                dp[j] = dp[j] + dp[j - arr[i - 1]];
+                dp[j] = max(helper[i - 1].second + dp[j - helper[i - 1].first], dp[j]);
             }
         }
     }
 
-    cout << dp[diff] << endl;
+    cout << dp[limit] << endl;
 
     return 0;
 }
-
