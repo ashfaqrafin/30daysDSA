@@ -47,40 +47,27 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    int n, target;
+    cin >> n >> target;
 
-    int sum = 0;
+    vi given(n);
+    repa(i, given) cin >> i;
 
-    vi arr(n);
-    repa(i, arr)
-    {
-        cin >> i;
-        sum += i;
-    }
-
-    int target = sum / 2;
     vi dp(target + 1);
     dp[0] = 1;
+
     repe(i, 1, n)
     {
-        repn(j, target, 0)
+        repe(j, 1, target)
         {
-            if (arr[i - 1] <= j)
+            if (given[i - 1] <= j)
             {
-                dp[j] = dp[j] or dp[j - arr[i - 1]];
+                dp[j] += dp[j - given[i - 1]];
             }
         }
     }
 
-    repn(i, target, 1)
-    {
-        if (dp[i])
-        {
-            cout << i << endl;
-            break;
-        }
-    }
+    cout << dp[target] << endl;
 
     return 0;
 }
