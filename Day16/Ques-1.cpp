@@ -38,20 +38,25 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
-int recursion(vi &length, vi &price, int n, int limit)
-{
+unordered_map<int, unordered_map<int, int>> helper;
 
-    if (n < 0 or limit == 0)
+int recursion(vi &given, int left, int right, int target)
+{
+    if (target == 0)
     {
         return 0;
     }
 
-    if (length[n] > limit)
+    if (left > right or target < 0)
     {
-        return recursion(length, price, n - 1, limit);
+        return INT_MAX;
+    }
+    if (helper[left][right])
+    {
+        return helper[left][right];
     }
 
-    return max(price[n] + recursion(length, price, n, limit - length[n]), recursion(length, price, n - 1, limit));
+    return helper[left][right] = 1 + min(recursion(given, left, right - 1, target - given[right]), recursion(given, left + 1, right, target - given[left]));
 }
 
 signed main(void)
@@ -63,15 +68,13 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, limit;
-    cin >> n >> limit;
+    int n, target;
+    cin >> n >> target;
 
-    vi length(n), price(n);
+    vi given(n);
+    repa(i, given) cin >> i;
 
-    repa(i, length) cin >> i;
-    repa(i, price) cin >> i;
-
-    cout << recursion(length, price, n - 1, limit) << endl;
+    cout << recursion(given, 0, n - 1, target) << endl;
 
     return 0;
 }
