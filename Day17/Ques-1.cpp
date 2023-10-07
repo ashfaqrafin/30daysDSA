@@ -38,27 +38,6 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
-unordered_map<int, unordered_map<int, int>> helper;
-
-int recursion(vi &given, int left, int right, int target)
-{
-    if (target == 0)
-    {
-        return 0;
-    }
-
-    if (left > right or target < 0)
-    {
-        return INT_MAX;
-    }
-    if (helper[left][right])
-    {
-        return helper[left][right];
-    }
-
-    return helper[left][right] = 1 + min(recursion(given, left, right - 1, target - given[right]), recursion(given, left + 1, right, target - given[left]));
-}
-
 signed main(void)
 {
 
@@ -68,13 +47,22 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, target;
-    cin >> n >> target;
+    string s1, s2;
+    cin >> s1 >> s2;
 
-    vi given(n);
-    repa(i, given) cin >> i;
+    vector<vector<int>> dp(s1.length() + 1, vector<int>(s2.length() + 1));
 
-    cout << recursion(given, 0, n - 1, target) << endl;
+    repe(i, 1, s1.length())
+    {
+        repe(j, 1, s2.length())
+        {
+            if (s1[i - 1] == s2[j - 1])
+                dp[i][j] = 1 + dp[i - 1][j - 1];
+            else
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+        }
+    }
+    cout << dp[s1.length()][s2.length()] << endl;
 
     return 0;
 }
