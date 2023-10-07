@@ -38,27 +38,6 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
-unordered_map<int, unordered_map<int, int>> helper;
-
-int recursion(vi &given, int left, int right, int target)
-{
-    if (target == 0)
-    {
-        return 0;
-    }
-
-    if (left > right or target < 0)
-    {
-        return INT_MAX;
-    }
-    if (helper[left][right])
-    {
-        return helper[left][right];
-    }
-
-    return helper[left][right] = 1 + min(recursion(given, left, right - 1, target - given[right]), recursion(given, left + 1, right, target - given[left]));
-}
-
 signed main(void)
 {
 
@@ -68,13 +47,31 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, target;
-    cin >> n >> target;
+    string s1, s2;
+    cin >> s1 >> s2;
 
-    vi given(n);
-    repa(i, given) cin >> i;
+    vector<vector<string>> dp(s1.length() + 1, vector<string>(s2.length()));
 
-    cout << recursion(given, 0, n - 1, target) << endl;
+    repe(i, 0, s1.length())
+    {
+        repe(j, 0, s2.length())
+        {
+            if (i == 0 or j == 0)
+            {
+                dp[i][j] = "";
+            }
+            else if (s1[i - 1] == s2[j - 1])
+            {
+                dp[i][j] = dp[i - 1][j - 1] + s1[i - 1];
+            }
+            else
+            {
+                dp[i][j] = (dp[i - 1][j].size() > dp[i][j - 1].size()) ? dp[i - 1][j] : dp[i][j - 1];
+            }
+        }
+    }
+
+    cout << dp[s1.length()][s2.length()] << endl;
 
     return 0;
 }
