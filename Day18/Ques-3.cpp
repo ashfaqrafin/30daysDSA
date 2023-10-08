@@ -47,47 +47,31 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    string s1, s2;
-    cin >> s1 >> s2;
+    int n1, n2;
+    cin >> n1 >> n2;
 
-    vector<vector<string>> dp(s1.length() + 1, vector<string>(s2.length()));
+    vi given1(n1), given2(n2);
+    repa(i, given1) cin >> i;
+    repa(i, given2) cin >> i;
 
-    repe(i, 0, s1.length())
+    vector<vector<int>> dp(n1 + 1, vector<int>(n2 + 1));
+
+    repe(i, 1, n1)
     {
-        repe(j, 0, s2.length())
+        repe(j, 1, n2)
         {
-            if (i == 0 or j == 0)
+            if (given1[i - 1] == given2[j - 1])
             {
-                dp[i][j] = "";
-            }
-            else if (s1[i - 1] == s2[j - 1])
-            {
-                dp[i][j] = dp[i - 1][j - 1] + s1[i - 1];
+                dp[i][j] = 1 + dp[i - 1][j - 1];
             }
             else
             {
-                dp[i][j] = (dp[i - 1][j].size() > dp[i][j - 1].size()) ? dp[i - 1][j] : dp[i][j - 1];
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
             }
         }
     }
 
-    string ans = "";
-    int p1 = 0, p2 = 0;
-
-    repa(i, dp[s1.length()][s2.length()])
-    {
-        while (s1[p1] != i)
-            ans += s1[p1++];
-        while (s2[p2] != i)
-            ans += s2[p2++];
-        ans += i;
-        p1++;
-        p2++;
-    }
-
-    ans += s1.substr(p1) + s2.substr(p2);
-
-    cout << ans << endl;
+    cout << dp[n1][n2] << endl;
 
     return 0;
 }
