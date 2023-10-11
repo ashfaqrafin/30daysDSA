@@ -40,12 +40,16 @@ const int mod = 1e9 + 7;
 
 struct dimensions
 {
-    int h, l, w;
+    int h, w;
 };
 
-bool com(dimensions &a, dimensions &b)
+bool comp(dimensions &a, dimensions &b)
 {
-    return a.l * a.w > b.l * b.w;
+    if (a.w == b.w)
+    {
+        return a.h > b.h;
+    }
+    return a.w < b.w;
 }
 
 signed main(void)
@@ -60,54 +64,25 @@ signed main(void)
     int n;
     cin >> n;
 
-    vector<dimensions> arr(3 * n);
+    vector<dimensions> given(n);
 
-    int a, b, c;
-    int index = 0;
-    rep(i, 0, n)
+    repa(i, given)
     {
-        cin >> a >> b >> c;
-
-        arr[index].h = a;
-        arr[index].w = max(b, c);
-        arr[index].l = min(b, c);
-        index += 1;
-
-        arr[index].h = b;
-        arr[index].w = max(a, c);
-        arr[index].l = min(a, c);
-        index += 1;
-
-        arr[index].h = c;
-        arr[index].w = max(b, a);
-        arr[index].l = min(b, a);
-        index += 1;
+        cin >> i.w >> i.h;
     }
 
-    sort(all(arr), com);
-
-    vi dp(3 * n);
-    rep(i, 0, 3 * n)
+    sort(all(given), comp);
+    int ans = 0;
+    int prev = INT_MIN;
+    repa(i, given)
     {
-        dp[i] = arr[i].h;
-    }
-
-    rep(i, 1, 3 * n)
-    {
-        rep(j, 0, i)
+        if (i.h > prev)
         {
-            if (arr[i].w < arr[j].w and arr[i].l < arr[j].l and dp[i] < dp[j] + arr[i].h)
-            {
-                dp[i] = dp[j] + arr[i].h;
-            }
+            ans++;
+            prev = i.h;
         }
     }
-
-    repa(i, dp)
-    {
-        cout << i << " ";
-    }
-    cout << endl;
+    cout << ans - 1 << endl;
 
     return 0;
 }

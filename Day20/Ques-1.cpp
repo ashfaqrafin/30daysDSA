@@ -38,6 +38,16 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
+struct dimensions
+{
+    int h, w;
+};
+
+bool comp(dimensions &a, dimensions &b)
+{
+    return a.h < b.h;
+}
+
 signed main(void)
 {
 
@@ -47,37 +57,37 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    string s1, s2;
-    cin >> s1 >> s2;
+    int n;
+    cin >> n;
 
-    vector<vector<string>> dp(s1.length() + 1, vector<string>(s2.length() + 1));
+    vector<dimensions> given(n);
 
-    repe(i, 0, s1.length())
+    repa(i, given)
     {
-        repe(j, 0, s2.length())
+        cin >> i.w >> i.h;
+    }
+
+    sort(all(given), comp);
+
+    vi dp(n);
+
+    rep(i, 1, n)
+    {
+        rep(j, 0, i)
         {
-            if (i == 0 or j == 0)
+            if (given[i].h > given[j].h and given[i].w > given[j].w and dp[i] < 1 + dp[j])
             {
-                dp[i][j] = "";
-            }
-            else if (s1[i - 1] == s2[j - 1])
-            {
-                dp[i][j] = dp[i - 1][j - 1] + s1[i - 1];
-            }
-            else
-            {
-                dp[i][j] = (dp[i - 1][j].length() > dp[i][j - 1].length()) ? dp[i - 1][j] : dp[i][j - 1];
+                dp[i] = 1 + dp[j];
             }
         }
     }
 
-    if (s1 == dp[s1.length()][s2.length()])
+    repa(i, dp)
     {
-        cout << "True" << endl;
+        cout << i << " ";
     }
-    else
-    {
-        cout << "False" << endl;
-    }
+    cout << endl;
+
     return 0;
 }
+
