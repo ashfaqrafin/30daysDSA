@@ -47,26 +47,37 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n;
-    cin >> n;
+    string s1, s2;
+    cin >> s1 >> s2;
 
-    vi given(n);
-    repa(i, given) cin >> i;
+    vector<vector<int>> dp(s1.length() + 1, vector<int>(s2.length() + 1));
 
-    vi dp = given;
+    repe(i, 1, s2.length()) dp[0][i] = i;
+    repe(i, 1, s1.length()) dp[i][0] = i;
 
-    rep(i, 1, n)
+    repe(i, 1, s1.length())
     {
-        rep(j, 0, i)
+        repe(j, 1, s2.length())
         {
-            if (given[i] > given[j] and dp[i] < given[i] + dp[j])
+            if (s1[i - 1] == s2[j - 1])
             {
-                dp[i] = given[i] + dp[j];
+                dp[i][j] = dp[i - 1][j - 1];
+            }
+            else
+            {
+                dp[i][j] = min(dp[i - 1][j], min(dp[i - 1][j - 1], dp[i][j - 1])) + 1;
             }
         }
     }
 
-    cout << *max_element(all(dp)) << endl;
+    repa(i, dp)
+    {
+        repa(j, i)
+        {
+            cout << j << " ";
+        }
+        cout << endl;
+    }
 
     return 0;
 }

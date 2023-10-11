@@ -47,29 +47,31 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    string s1, s2;
-    cin >> s1 >> s2;
+    int n;
+    cin >> n;
 
-    vector<vector<string>> dp(s1.length() + 1, vector<string>(s2.length() + 1));
+    vi given(n);
+    repa(i, given) cin >> i;
 
-    repe(i, 0, s1.length())
+    int tillnow = 0;
+    int ans = INT_MIN, start, end;
+
+    rep(i, 0, n)
     {
-        repe(j, 0, s2.length())
+        tillnow += given[i];
+        if (tillnow < given[i])
         {
-            if (i == 0 or j == 0)
-                dp[i][j] = "";
-            else if (s1[i - 1] == s2[j - 1] and i != j)
-            {
-                dp[i][j] = dp[i - 1][j - 1] + s1[i - 1];
-            }
-            else
-            {
-                dp[i][j] = (dp[i - 1][j].length() > dp[i][j - 1].length()) ? dp[i - 1][j] : dp[i][j - 1];
-            }
+            start = i;
+            tillnow = given[i];
+        }
+        if (ans < tillnow)
+        {
+            end = i;
+            ans = tillnow;
         }
     }
 
-    cout << dp[s1.length()][s2.length()] << endl;
+    cout << start << " " << end << " " << ans << endl;
 
     return 0;
 }

@@ -38,6 +38,20 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
+struct dimensions
+{
+    int h, w;
+};
+
+bool comp(dimensions &a, dimensions &b)
+{
+    if (a.w == b.w)
+    {
+        return a.h > b.h;
+    }
+    return a.w < b.w;
+}
+
 signed main(void)
 {
 
@@ -47,31 +61,28 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n1, n2;
-    cin >> n1 >> n2;
+    int n;
+    cin >> n;
 
-    vi given1(n1), given2(n2);
-    repa(i, given1) cin >> i;
-    repa(i, given2) cin >> i;
+    vector<dimensions> given(n);
 
-    vector<vector<int>> dp(n1 + 1, vector<int>(n2 + 1));
-
-    repe(i, 1, n1)
+    repa(i, given)
     {
-        repe(j, 1, n2)
-        {
-            if (given1[i - 1] == given2[j - 1])
-            {
-                dp[i][j] = 1 + dp[i - 1][j - 1];
-            }
-            else
-            {
-                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
-            }
-        }
+        cin >> i.w >> i.h;
     }
 
-    cout << dp[n1][n2] << endl;
+    sort(all(given), comp);
+    int ans = 0;
+    int prev = INT_MIN;
+    repa(i, given)
+    {
+        if (i.h > prev)
+        {
+            ans++;
+            prev = i.h;
+        }
+    }
+    cout << ans - 1 << endl;
 
     return 0;
 }

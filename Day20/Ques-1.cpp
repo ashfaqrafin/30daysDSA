@@ -38,6 +38,16 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
+struct dimensions
+{
+    int h, w;
+};
+
+bool comp(dimensions &a, dimensions &b)
+{
+    return a.h < b.h;
+}
+
 signed main(void)
 {
 
@@ -50,23 +60,34 @@ signed main(void)
     int n;
     cin >> n;
 
-    vi given(n);
-    repa(i, given) cin >> i;
+    vector<dimensions> given(n);
 
-    vi dp(n, 1);
+    repa(i, given)
+    {
+        cin >> i.w >> i.h;
+    }
 
-    rep(i, 0, n)
+    sort(all(given), comp);
+
+    vi dp(n);
+
+    rep(i, 1, n)
     {
         rep(j, 0, i)
         {
-            if (given[i] > given[j] and dp[i] <= dp[j])
+            if (given[i].h > given[j].h and given[i].w > given[j].w and dp[i] < 1 + dp[j])
             {
                 dp[i] = 1 + dp[j];
             }
         }
     }
 
-    cout << *max_element(all(dp)) << endl;
+    repa(i, dp)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
 
     return 0;
 }
+
