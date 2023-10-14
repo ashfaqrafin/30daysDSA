@@ -47,33 +47,36 @@ signed main(void)
     cout.tie(nullptr);
     cin.tie(nullptr);
 
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
-    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 1));
+    vi given(n);
+    repa(i, given) cin >> i;
 
-    dp[1][1] = 0;
-    dp[1][2] = 0;
+    int arrSum = 0;
+    int min_straight_sum = INT_MAX, max_straight_sum = INT_MIN;
+    int temp_maxSum = 0, temp_minSum = 0;
 
-    repe(i, 1, n)
+    repa(i, given)
     {
-        repe(j, 1, m)
-        {
-            if (dp[i][j])
-            {
-                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
-            }
-        }
+        arrSum += i;
+
+        temp_maxSum += i;
+        max_straight_sum = (max_straight_sum < temp_maxSum) ? temp_maxSum : max_straight_sum;
+        temp_maxSum = (temp_maxSum < 0) ? 0 : temp_maxSum;
+
+        temp_minSum += i;
+        min_straight_sum = (min_straight_sum > temp_minSum) ? temp_minSum : min_straight_sum;
+        temp_minSum = (temp_minSum > 0) ? 0 : temp_minSum;
     }
 
-    repa(i, dp)
+    if (min_straight_sum == arrSum)
     {
-        repa(j, i)
-        {
-            cout << j << " ";
-        }
-        cout << endl;
+        cout << max_straight_sum << endl;
+        return 0;
     }
+
+    cout << max(max_straight_sum, arrSum - min_straight_sum) << endl;
 
     return 0;
 }
