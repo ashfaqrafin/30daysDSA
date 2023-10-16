@@ -38,22 +38,11 @@ const int mod = 1e9 + 7;
 // pair
 #define pii pair<int, int>
 
-signed main(void)
+int retangle(vector<vector<int>> &given, int row)
 {
-
-    // cout.precision(10);
-    // cout.setf(ios::fixed);
-    ios::sync_with_stdio(false);
-    cout.tie(nullptr);
-    cin.tie(nullptr);
-
-    int n;
-    cin >> n;
-
-    vi given(n);
-    repa(i, given) cin >> i;
-
     stack<int> helper;
+    int n = given[row].size();
+
     vi left(n), right(n), ans(n);
 
     rep(i, 0, n)
@@ -65,9 +54,10 @@ signed main(void)
         }
         else
         {
-            while (!helper.empty() and given[helper.top()] >= given[i])
+            while (!helper.empty() and given[row][i] <= given[row][helper.top()])
                 helper.pop();
-            left[i] = helper.empty() ? 0 : helper.top() + 1;
+
+            left[i] = (helper.empty()) ? 0 : helper.top() + 1;
             helper.push(i);
         }
     }
@@ -81,20 +71,56 @@ signed main(void)
         }
         else
         {
-            while (!helper.empty() and given[helper.top()] >= given[i])
+            while (!helper.empty() and given[row][i] <= given[row][helper.top()])
                 helper.pop();
-            right[i] = helper.empty() ? n - 1 : helper.top() - 1;
+            right[i] = (helper.empty()) ? n - 1 : helper.top() - 1;
             helper.push(i);
         }
     }
 
     rep(i, 0, n)
     {
-        ans[i] = (right[i] - left[i] + 1) * given[i];
+        ans[i] = (right[i] - left[i] + 1) * given[row][i];
+    }
+    return *max_element(all(ans));
+}
+
+signed main(void)
+{
+
+    // cout.precision(10);
+    // cout.setf(ios::fixed);
+    ios::sync_with_stdio(false);
+    cout.tie(nullptr);
+    cin.tie(nullptr);
+
+    int row, col;
+    cin >> row >> col;
+    vector<vector<int>> given(row, vector<int>(col));
+
+    repa(i, given)
+    {
+        repa(j, i)
+        {
+            cin >> j;
+        }
     }
 
-    repa(i, ans) cout << i << " ";
-    cout << endl;
+    rep(i, 1, row)
+    {
+        rep(j, 0, col)
+        {
+            if (given[i][j])
+            {
+                given[i][j] += given[i - 1][j];
+            }
+        }
+    }
+
+    rep(i, 0, row)
+    {
+        cout << retangle(given, i) << endl;
+    }
 
     return 0;
 }
